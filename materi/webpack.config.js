@@ -4,7 +4,7 @@ const path = require('path');
 module.exports = {
   entry: {
     main: './src/main.ts',
-    schema: './schema/main.js',
+    schema: './schema/main.ts',
   },
   output: {
     path: path.resolve(__dirname, 'www'),
