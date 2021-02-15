@@ -1,34 +1,34 @@
-const {
+import {
   fetchTasksApi,
   addTaskApi,
   doneTaskApi,
   undoneTaskApi,
-} = require('../api/todo-service');
-const {
+} from '../api/todo-service';
+import {
   addAction,
   doneAction,
   undoneAction,
   loadTasksAction,
-} = require('./store');
+} from './store';
 
-const addTaskAsync = (task) => async (dispatch) => {
+export const addTaskAsync = (task: string) => async (dispatch: any) => {
   const taskData = await addTaskApi(task);
   dispatch(addAction(taskData));
 };
 
-const loadTasksAsync = async (dispatch) => {
+export const loadTasksAsync = async (dispatch) => {
   const tasksAsync = await fetchTasksApi();
   dispatch(loadTasksAction(tasksAsync));
 };
 
-const doneTaskAsync = (id) => {
+export const doneTaskAsync = (id) => {
   return async (dispatch) => {
     await doneTaskApi(id);
     dispatch(doneAction(id));
   };
 };
 
-const undoneTaskAsync = (id) => {
+export const undoneTaskAsync = (id) => {
   return async (dispatch) => {
     try {
       await undoneTaskApi(id);
@@ -37,11 +37,4 @@ const undoneTaskAsync = (id) => {
       console.log(err);
     }
   };
-};
-
-module.exports = {
-  addTaskAsync,
-  loadTasksAsync,
-  doneTaskAsync,
-  undoneTaskAsync,
 };

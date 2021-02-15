@@ -1,4 +1,4 @@
-const loggingMiddleware = (store) => {
+export const loggingMiddleware = (store) => {
   return (next) => {
     return (action) => {
       console.log('dispatch', action.type);
@@ -8,7 +8,7 @@ const loggingMiddleware = (store) => {
   };
 };
 
-const delayActionMiddleware = store => next => action => {
+export const delayActionMiddleware = store => next => action => {
   console.log('state', store.getState());
   if (action.type === 'done') {
     setTimeout(() => {
@@ -19,16 +19,10 @@ const delayActionMiddleware = store => next => action => {
   }
 }
 
-const asyncMiddleware = store => next => action => {
+export const asyncMiddleware = store => next => action => {
   if (typeof action === 'function') {
     return action(store.dispatch, store.getState);
   }
 
   return next(action);
 }
-
-module.exports = {
-  loggingMiddleware,
-  delayActionMiddleware,
-  asyncMiddleware,
-};

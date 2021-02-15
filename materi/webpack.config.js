@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    main: './src/main.js',
+    main: './src/main.ts',
     schema: './schema/main.js',
   },
   output: {
@@ -21,6 +21,9 @@ module.exports = {
       safe: true,
     }),
   ],
+  resolve: {
+    extensions: ['.js', '.ts'],
+  },
   module: {
     rules: [
       {
@@ -30,6 +33,11 @@ module.exports = {
       {
         test: /\.yaml$/,
         use: [{ loader: 'json-loader' }, { loader: 'yaml-loader' }],
+      },
+      {
+        test: /\.ts$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/,
       },
     ],
   },

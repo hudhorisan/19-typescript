@@ -1,13 +1,13 @@
 {
-  "name": "typescript",
+  "name": "19-typescript",
   "version": "1.0.0",
-  "description": "typescript",
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode production",
     "dev": "webpack serve --open --mode development",
     "lint": "eslint .",
-    "service": "nodemon service/server.js",
+    "service": "ts-node --project service/tsconfig.json service/server.ts",
+    "service:dev": "nodemon --config service/nodemon.json",
     "docs:svc": "jsdoc -c service/docs.json",
     "docs:web": "jsdoc -c docs.json"
   },
@@ -24,6 +24,9 @@
     "livereload": "^0.9.1",
     "prettier": "^2.2.1",
     "style-loader": "^2.0.0",
+    "ts-loader": "^8.0.17",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.5",
     "webpack": "^5.17.0",
     "webpack-cli": "^4.4.0",
     "webpack-dev-server": "^3.11.2",

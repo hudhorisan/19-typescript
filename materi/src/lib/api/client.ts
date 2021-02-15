@@ -1,25 +1,31 @@
 /** @module httpClient */
 
+export interface RequestOption {
+  method: 'GET' | 'POST' | 'PUT' | 'OPTION';
+  body?: any;
+  customConf?: any;
+}
+
 /**
  * ### basic client untuk request ke `server`
  * @param {string} endpoint target / url endpoint
  * @param {RequestInit} options tambahan opsi [request](http://localhost)
  * @returns {Promise<any>} hasil request
  */
-async function client(endpoint, { method, body, ...customConf } = {}) {
+async function client(endpoint: string, options: RequestOption): Promise<any> {
   const headers = { 'Content-Type': 'application/json' };
 
   const config = {
-    method,
-    ...customConf,
+    method: options?.method ?? 'GET',
+    ...options?.customConf,
     headers: {
       ...headers,
-      ...customConf.headers,
+      ...options?.customConf?.headers,
     },
   };
 
-  if (body) {
-    config.body = JSON.stringify(body);
+  if (options?.body) {
+    config.body = JSON.stringify(options?.body);
   }
 
   let data;
@@ -27,12 +33,12 @@ async function client(endpoint, { method, body, ...customConf } = {}) {
     const response = await window.fetch(endpoint, config);
     data = await response.json();
     if (!response.ok) {
-      throw new Error(data.statusText);
+      throw new Error(data?.statusText ?? 'Gagal request ke api');
     }
 
     return data;
   } catch (err) {
-    return Promise.reject(err.message || data);
+    return Promise.reject(err?.message || data);
   }
 }
 
@@ -41,8 +47,12 @@ async function client(endpoint, { method, body, ...customConf } = {}) {
  * @param {string} endpoint target / url endpoint
  * @param {RequestInit} options tambahan opsi request
  */
-client.get = (endpoint, customConf = {}) => {
-  return client(endpoint, { method: 'GET', ...customConf });
+client.get = (endpoint: string, customConf:any = {}): Promise<any> => {
+  const config: RequestOption = {
+    method: 'GET',
+    ...customConf
+  };
+  return client(endpoint, config);
 };
 
 /**
@@ -51,7 +61,7 @@ client.get = (endpoint, customConf = {}) => {
  * @param {Object} body konten dari request
  * @param {RequestInit} options tambahan opsi request
  */
-client.post = (endpoint, body, customConf = {}) => {
+client.post = <T>(endpoint: string, body: any, customConf: any = {}): Promise<T> => {
   return client(endpoint, { method: 'POST', body, ...customConf });
 };
 
@@ -61,8 +71,8 @@ client.post = (endpoint, body, customConf = {}) => {
  * @param {Object} body konten dari request
  * @param {RequestInit} options tambahan opsi request
  */
-client.put = (endpoint, body, customConf = {}) => {
+client.put = (endpoint: string, body?: any, customConf: any = {}): Promise<any> => {
   return client(endpoint, { method: 'PUT', body, ...customConf });
 };
 
-module.exports = { client };
+export { client as httpClient };
