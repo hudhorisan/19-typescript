@@ -1,21 +1,21 @@
-const { createServer } = require('http');
-const { connect } = require('./lib/orm');
-const url = require('url');
-const { stdout } = require('process');
-const {
+import { createServer, IncomingMessage, ServerResponse } from 'http';
+import { connect } from './lib/orm';
+import * as url from 'url';
+import { stdout } from 'process';
+import {
   listSvc,
   addSvc,
   removeSvc,
   doneSvc,
   undoneSvc,
-} = require('./todo.service');
-const { TodoSchema } = require('./todo.model');
-const { config } = require('./config');
+} from './todo.service';
+import { TodoSchema } from './todo.model';
+import { config } from './config';
 
 /**
  * intiate database connection
  */
-async function init() {
+async function init(): Promise<void> {
   try {
     console.log('connect to database');
     await connect([TodoSchema], config.database);
@@ -26,7 +26,7 @@ async function init() {
   }
 }
 
-const server = createServer((req, res) => {
+const server = createServer((req: IncomingMessage, res: ServerResponse) => {
   let method = req.method;
   // handle preflight request
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -44,7 +44,7 @@ const server = createServer((req, res) => {
   let message = 'tidak ditemukan data';
   let statusCode = 200;
   const uri = url.parse(req.url, true);
-  const respond = () => {
+  const respond = (): void => {
     res.statusCode = statusCode;
     res.write(message);
     res.end();

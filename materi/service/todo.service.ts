@@ -1,7 +1,7 @@
 /** @module todoService */
 
-const url = require('url');
-const {
+import * as url from 'url';
+import {
   add,
   remove,
   done,
@@ -9,16 +9,15 @@ const {
   list,
   ERROR_ADD_DATA_INVALID,
   ERROR_TODO_NOT_FOUND,
-} = require('./todo');
-// eslint-disable-next-line no-unused-vars
-const { ClientRequest, IncomingMessage, ServerResponse } = require('http');
+} from './todo';
+import { IncomingMessage, ServerResponse } from 'http';
 
 /**
  * service to get list of todos
  * @param {IncomingMessage} req
  * @param {ServerResponse} res
  */
-async function listSvc(req, res) {
+export async function listSvc(req: IncomingMessage, res: ServerResponse): Promise<void> {
   try {
     const todos = await list();
     res.setHeader('content-type', 'application/json');
@@ -34,10 +33,10 @@ async function listSvc(req, res) {
 
 /**
  * service to add a new todo
- * @param {ClientRequest} req
+ * @param {IncomingMessage} req
  * @param {ServerResponse} res
  */
-async function addSvc(req, res) {
+export async function addSvc(req: IncomingMessage, res: ServerResponse): Promise<void> {
   let data = '';
   req.on('data', (chunk) => {
     data += chunk;
@@ -70,9 +69,9 @@ async function addSvc(req, res) {
  * @param {IncomingMessage} req
  * @param {ServerResponse} res
  */
-async function removeSvc(req, res) {
+export async function removeSvc(req: IncomingMessage, res: ServerResponse): Promise<void> {
   const uri = url.parse(req.url, true);
-  const id = uri.query['id'];
+  const id = uri.query['id'] as string;
   if (!id) {
     res.statusCode = 401;
     res.write('parameter id tidak ditemukan');
@@ -104,9 +103,9 @@ async function removeSvc(req, res) {
  * @param {IncomingMessage} req
  * @param {ServerResponse} res
  */
-async function doneSvc(req, res) {
+export async function doneSvc(req: IncomingMessage, res: ServerResponse): Promise<void> {
   const uri = url.parse(req.url, true);
-  const id = uri.query['id'];
+  const id = <string>uri.query['id'];
   if (!id) {
     res.statusCode = 401;
     res.write('parameter id tidak ditemukan');
@@ -139,9 +138,9 @@ async function doneSvc(req, res) {
  * @param {IncomingMessage} req
  * @param {ServerResponse} res
  */
-async function undoneSvc(req, res) {
+export async function undoneSvc(req: IncomingMessage, res: ServerResponse): Promise<void> {
   const uri = url.parse(req.url, true);
-  const id = uri.query['id'];
+  const id = uri.query['id'] as string;
   if (!id) {
     res.statusCode = 401;
     res.write('parameter id tidak ditemukan');
@@ -167,11 +166,3 @@ async function undoneSvc(req, res) {
     return;
   }
 }
-
-module.exports = {
-  addSvc,
-  listSvc,
-  removeSvc,
-  doneSvc,
-  undoneSvc,
-};

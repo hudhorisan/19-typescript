@@ -1,18 +1,29 @@
 /** @module todoSchema */
 
-const { EntitySchema } = require('typeorm');
+import { EntitySchema } from 'typeorm';
+
+export interface Task {
+  id: number;
+  task: string;
+  done: boolean;
+}
 
 /**
  * todo model
  */
-class Todo {
+export class Todo {
+  public id: number;
   /**
    * create new instance of todo model
    * @param {string} id id of a todo
    * @param {string} task task description
    * @param {boolean} done true when task are done
    */
-  constructor(id, task, done) {
+  constructor(
+    id: number,
+    public task: string,
+    public done: boolean
+  ) {
     this.id = id;
     this.task = task;
     this.done = done;
@@ -22,7 +33,7 @@ class Todo {
 /**
  * enty schema of todo model
  */
-const TodoSchema = new EntitySchema({
+export const TodoSchema = new EntitySchema<Task>({
   name: 'Todo',
   target: Todo,
   tableName: 'todos',
@@ -42,8 +53,3 @@ const TodoSchema = new EntitySchema({
     },
   },
 });
-
-module.exports = {
-  Todo,
-  TodoSchema,
-};

@@ -1,7 +1,5 @@
 /** @module orm */
-const { createConnection } = require('typeorm');
-// eslint-disable-next-line no-unused-vars
-const { EntitySchema } = require('typeorm');
+import  { ConnectionOptions, createConnection, EntitySchema } from 'typeorm';
 
 /**
  * connect to database
@@ -23,15 +21,10 @@ const { EntitySchema } = require('typeorm');
  *  });
  * }
  */
-function connect(entities, config) {
+export function connect(entities: EntitySchema[], config: ConnectionOptions) {
   return createConnection({
     ...config,
     synchronize: true,
-    timezone: 'Asia/Jakarta',
     entities,
   });
 }
-
-module.exports = {
-  connect,
-};
